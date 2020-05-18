@@ -95,7 +95,8 @@ echo users/$CA-$ID.key
   SECRETKEY=`od -t x1 -A n database/$CA/private/secretkey | sed 's/ //g' | tr 'a-f' 'A-F'`
   COUNTER=`cat database/$CA/counter`
   echo `expr $COUNTER + 1` > database/$CA/counter
-  SERIAL=`echo -n $COUNTER | openssl enc -e -K $SECRETKEY -iv 00000000000000000000000000000000 -aes-128-cbc | od -t x1 -A n | sed 's/ //g' | tr 'a-f' 'A-F'`
+  IV=`hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom`
+  SERIAL=`echo -n $COUNTER | openssl enc -e -K $SECRETKEY -iv $IV -aes-128-cbc | od -t x1 -A n | sed 's/ //g' | tr 'a-f' 'A-F'`
   echo $SERIAL > database/$CA/serial
   echo "Creating user certificate" && openssl ca -utf8 -config conf/$CA.cnf -in users/$CA-$ID.req -startdate $SD -enddate $ED -out users/$CA-$ID.crt -extensions $PROFILE -batch
   echo "Creating PKCS#12 object" && openssl pkcs12 -export -in users/$CA-$ID.crt -inkey users/$CA-$ID.key -password "pass:$PASSPHRASE" -out users/$CA-$ID.p12 -CApath store -chain
