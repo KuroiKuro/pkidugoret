@@ -67,7 +67,8 @@ createrootca() {
   SECRETKEY=`od -t x1 -A n database/$CA/private/secretkey | sed 's/ //g' | tr 'a-f' 'A-F'`
   COUNTER=`cat database/$CA/counter`
   echo `expr $COUNTER + 1` > database/$CA/counter
-  SERIALHEX=`echo -n $COUNTER | openssl enc -e -K $SECRETKEY -iv 00000000000000000000000000000000 -aes-128-cbc | od -t x1 -A n | sed 's/ //g' | tr 'a-f' 'A-F'`
+  IV=`hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom`
+  SERIALHEX=`echo -n $COUNTER | openssl enc -e -K $SECRETKEY -iv $IV -aes-128-cbc | od -t x1 -A n | sed 's/ //g' | tr 'a-f' 'A-F'`
   SERIAL=`(echo ibase=16; echo $SERIALHEX) | bc -l`
 
   # Create Openssl conf specific file
