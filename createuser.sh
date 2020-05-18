@@ -1,7 +1,7 @@
 #! /bin/sh
 
 createenduser() {
-  TEMP=`getopt -o i:c:s:t:e:k:d:p:h --long id:,ca:,subject:,keytype:,ecurve:keysize:,days:,profile:,passphrase:,rekey:,help -n 'createuser.sh' -- "$@"`
+  TEMP=`getopt -o a:z:i:c:s:t:e:k:d:p:h --long id:,ca:,subject:,keytype:,ecurve:keysize:,days:,profile:,passphrase:,rekey:,help -n 'createuser.sh' -- "$@"`
   KEYSIZE=2048
   KEYTYPE=rsa
   ECURVE=prime256v1
