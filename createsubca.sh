@@ -78,7 +78,8 @@ createsubca() {
   SECRETKEY=`od -t x1 -A n database/$ISSUERCA/private/secretkey | sed 's/ //g' | tr 'a-f' 'A-F'`
   COUNTER=`cat database/$ISSUERCA/counter`
   echo `expr $COUNTER + 1` > database/$ISSUERCA/counter
-  SERIAL=`echo -n $COUNTER | openssl enc -e -K $SECRETKEY -iv 00000000000000000000000000000000 -aes-128-cbc | od -t x1 -A n | sed 's/ //g' | tr 'a-f' 'A-F'`
+  IV=`hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom`
+  SERIAL=`echo -n $COUNTER | openssl enc -e -K $SECRETKEY -iv $IV -aes-128-cbc | od -t x1 -A n | sed 's/ //g' | tr 'a-f' 'A-F'`
   echo $SERIAL > database/$ISSUERCA/serial
   echo "Creating CA certificate" && openssl ca -utf8 -config conf/$ISSUERCA.cnf -in database/$CA/careq.pem -days $DAYS -out database/$CA/cacert.pem -extensions $PROFILE -batch
   echo "Updating store" && cp database/$CA/cacert.pem store/$ISSUERCA-$CA.pem && cd store && ./hashit.sh $ISSUERCA-$CA.pem
