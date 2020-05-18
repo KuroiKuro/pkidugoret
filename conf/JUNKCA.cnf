@@ -167,5 +167,12 @@ KeyUsage = digitalSignature, nonRepudiation, keyEncipherment
 subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid:always
 
+[ v3_Sign_Cipher_Auth ]
+basicConstraints = critical, CA:false
+KeyUsage = digitalSignature, nonRepudiation, keyEncipherment
+extendedKeyUsage = clientAuth
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always
+
 [ crl_ext ]
 authorityKeyIdentifier=keyid:always
