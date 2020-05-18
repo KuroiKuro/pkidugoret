@@ -19,6 +19,8 @@ createenduser() {
       -e|--ecurve) ECURVE=$2; shift 2;;
       -k|--keysize) KEYSIZE=$2; shift 2;;
       -d|--days) DAYS=$2; shift 2;;
+      -s|--startdate) SD=$2; shift 2;;
+      -z|--enddate) ED=$2; shift 2;;   
       -p|--profile) PROFILE=$2; shift 2;;
       --passphrase) PASSPHRASE="$2"; shift 2;;
       --rekey) REKEY="$2"; shift 2;;
@@ -30,6 +32,8 @@ createenduser() {
                  echo " (-e|--ecurve <curvename>) # default prime256v1"
                  echo " (-k|--key <keysize>)      # default 2048"
                  echo " (-d|--days <days>)        # default 30"
+                 echo " (-s|--startdate <date>)   # default now"
+		             echo " (-z|--enddate <date>)     # default 1 year"
                  echo " (-p|--profile <profile>)  # default v3_user"
                  echo " (--passphrase <pwd>)      # default 69866640"
                  echo " (--rekey)                 # default false"
@@ -93,7 +97,7 @@ echo users/$CA-$ID.key
   echo `expr $COUNTER + 1` > database/$CA/counter
   SERIAL=`echo -n $COUNTER | openssl enc -e -K $SECRETKEY -iv 00000000000000000000000000000000 -aes-128-cbc | od -t x1 -A n | sed 's/ //g' | tr 'a-f' 'A-F'`
   echo $SERIAL > database/$CA/serial
-  echo "Creating user certificate" && openssl ca -utf8 -config conf/$CA.cnf -in users/$CA-$ID.req -days $DAYS -out users/$CA-$ID.crt -extensions $PROFILE -batch
+  echo "Creating user certificate" && openssl ca -utf8 -config conf/$CA.cnf -in users/$CA-$ID.req -startdate $SD -enddate $ED -out users/$CA-$ID.crt -extensions $PROFILE -batch
   echo "Creating PKCS#12 object" && openssl pkcs12 -export -in users/$CA-$ID.crt -inkey users/$CA-$ID.key -password "pass:$PASSPHRASE" -out users/$CA-$ID.p12 -CApath store -chain
   echo "Deleting certificate request" && rm users/$CA-$ID.req
   echo "====="
