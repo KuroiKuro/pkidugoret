@@ -60,6 +60,8 @@ TimeStamp => v3_timestamp
 
 Signature and encipherment => v3_sign_cipher
 
+Signature, encipherment and Authntication => v3_sign_cipher_auth
+
 CRL => crl_ext
 
 
