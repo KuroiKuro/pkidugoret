@@ -19,7 +19,7 @@ createenduser() {
       -e|--ecurve) ECURVE=$2; shift 2;;
       -k|--keysize) KEYSIZE=$2; shift 2;;
       -d|--days) DAYS=$2; shift 2;;
-      -s|--startdate) SD=$2; shift 2;;
+      -a|--startdate) SD=$2; shift 2;;
       -z|--enddate) ED=$2; shift 2;;   
       -p|--profile) PROFILE=$2; shift 2;;
       --passphrase) PASSPHRASE="$2"; shift 2;;
@@ -32,8 +32,8 @@ createenduser() {
                  echo " (-e|--ecurve <curvename>) # default prime256v1"
                  echo " (-k|--key <keysize>)      # default 2048"
                  echo " (-d|--days <days>)        # default 30"
-                 echo " (-s|--startdate <date>)   # default now"
-		             echo " (-z|--enddate <date>)     # default 1 year"
+                 echo " (-a|--startdate <date>)   # default now"
+		 echo " (-z|--enddate <date>)     # default 1 year"
                  echo " (-p|--profile <profile>)  # default v3_user"
                  echo " (--passphrase <pwd>)      # default 69866640"
                  echo " (--rekey)                 # default false"
